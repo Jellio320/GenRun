@@ -9,7 +9,7 @@
 #define BUFFER_SIZE 256
 #define UNUSED(x) ((void) (x))
 
-const char helpStr[466] = "Generate a batch file to auto run program.\nUsage: GenRun [options]\nOptions:\n -a, --args\t\t\tAdditional arguments to automaticaly pass to program when run.\n -e, --extension\t\tFile extension of program. If no argument is passed, then defaults to \".exe\".\n -h, --help\t\t\tDisplays this message.\n -n, --name \t\t\tName of program to call in batch.\n -o, --output <file>\t\tOutputs to <file>. Defaults to \"Run.bat\".\n -p, --path <directory>\t\tPrefixes program call with <directory>\\.\n";
+const char helpStr[477] = "Generate a batch file to auto run program.\nUsage: GenRun [options] name ...\nOptions:\n -a, --args\t\t\tAdditional arguments to automaticaly pass to program when run.\n -e, --extension\t\tFile extension of program. If no argument is passed, then defaults to \".exe\".\n -h, --help\t\t\tDisplays this message.\n -n, --name \t\t\tName of program to call in batch.\n -o, --output <file>\t\tOutputs to <file>. Defaults to \"Run.bat\".\n -p, --path <directory>\t\tPrefixes program call with \"<directory>\\\".\n";
 
 char name[BUFFER_SIZE], ext[BUFFER_SIZE], path[BUFFER_SIZE], fname[BUFFER_SIZE], *args = "\0";
 FILE* file;
@@ -73,8 +73,8 @@ int main(int argc, char** argv) {
 
             default:
             case 'h':
-                fprintf(stderr, helpStr);
-                exit(1);
+                printf(helpStr);
+                return 1;
 
             case 'o':
                 strncpy(fname, optarg, BUFFER_SIZE - 1);
@@ -102,15 +102,23 @@ int main(int argc, char** argv) {
                     fprintf(stderr, "Must specify a name.\n");
                     break;
                 }
-                exit(1);
+                return 1;
                 break;
             }
         }
 
+        int i = optind;
+        while (i < (argc - 1)) {
+            i++;
+        }
+
+        if (*name == 0) {
+            strncpy(name, *(argv + i), BUFFER_SIZE - 1);
+        }
 
     } else {
-        fprintf(stderr, helpStr);
-        exit(1);
+        printf(helpStr);
+        return 1;
     }
     if (*name == 0) {
         fprintf(stderr, "Must specify a name.\n");
