@@ -2,21 +2,24 @@ PROJECT := GenRun
 SRCDIR = Src
 OBJDIR = Int
 CC := gcc
-CFLAGS := -std=c99 -O2 -Wall -Wextra -Wcast-align -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wundef -fmessage-length=0
+CFLAGS := -std=c99 -g3 -O2 -Wall -Wextra -Wcast-align -Wlogical-op -Wmissing-include-dirs -Wredundant-decls -Wundef -fmessage-length=0
 
 OBJS := $(patsubst $(SRCDIR)%.c, $(OBJDIR)%.o, $(wildcard $(SRCDIR)/*.c))
 
+POSTCMD := ./GenRun.exe --name $(PROJECT) -e --output=rungen.bat
 deps := $(patsubst, %.o, %.d, $(OBJS))
 -include $(deps)
 DEPFLAGS = -MMD -MF $(@:.o=.d)
 
-.PHONY: dirs
+.PHONY: dirs clean
 
 all: dirs $(PROJECT).exe
 
 $(PROJECT).exe: $(OBJS)
 	@echo Linking
 	$(CC) -o $(PROJECT).exe $^
+	@echo Post Build Command
+	$(POSTCMD)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@echo Compiling $<
@@ -32,4 +35,4 @@ $(OBJDIR):
 
 
 clean: 
-	rm -f $(OBJDIR)/*.d $(OBJDIR)/*_e.c $(OBJDIR)/*.s $(OBJDIR)/*.o $(PROJECT).exe 
+	rm -f $(OBJDIR)/*_e.c $(OBJDIR)/*.s $(OBJDIR)/*.o $(PROJECT).exe 
