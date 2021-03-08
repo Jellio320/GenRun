@@ -6,7 +6,6 @@
 *.ko
 *.obj
 *.elf
-Int
 
 # Linker output
 *.ilk
@@ -36,7 +35,7 @@ Int
 *.i*86
 *.x86_64
 *.hex
-*.bat
+GenRun
 
 # Debug files
 *.dSYM/
@@ -54,3 +53,6 @@ Mkfile.old
 dkms.conf
 
 .vscode
+Int/
+*.bat
+*.sh
